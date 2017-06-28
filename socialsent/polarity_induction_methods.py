@@ -1,7 +1,6 @@
 from socialsent import util
 import functools
 import numpy as np
-from socialsent import embedding_transformer
 from scipy.sparse import csr_matrix
 from multiprocessing import Pool
 from sklearn.linear_model import LogisticRegression, Ridge
@@ -37,32 +36,18 @@ def pmi(count_embeds, positive_seeds, negative_seeds, smooth=0.01, **kwargs):
     polarities = {}
     for w in count_embeds.iw:
         if w not in positive_seeds and w not in negative_seeds:
-            pol = sum(np.log(counts[w_index[w], c_index[seed]] + smooth) 
+            pol = sum(np.log(counts[w_index[w], c_index[seed]] + smooth)
                     - np.log(counts[w_index[seed],:].sum()) for seed in positive_seeds)
-            pol -= sum(np.log(counts[w_index[w], c_index[seed]] + smooth) 
+            pol -= sum(np.log(counts[w_index[w], c_index[seed]] + smooth)
                     - np.log(counts[w_index[seed],:].sum())for seed in negative_seeds)
             polarities[w] = pol
-    return polarities
-
-def densify(embeddings, positive_seeds, negative_seeds, 
-        transform_method=embedding_transformer.apply_embedding_transformation, **kwargs):
-    """
-    Learns polarity scores via orthogonally-regularized projection to one-dimension
-    Adapted from: http://arxiv.org/pdf/1602.07572.pdf
-    """
-    p_seeds = {word:1.0 for word in positive_seeds}
-    n_seeds = {word:1.0 for word in negative_seeds}
-    new_embeddings = embeddings
-    new_embeddings = embedding_transformer.apply_embedding_transformation(
-            embeddings, p_seeds, n_seeds, n_dim=1,  **kwargs)
-    polarities = {w:new_embeddings[w][0] for w in embeddings.iw}
     return polarities
 
 
 def random_walk(embeddings, positive_seeds, negative_seeds, beta=0.9, **kwargs):
     """
     Learns polarity scores via random walks with teleporation to seed sets.
-    Main method used in paper. 
+    Main method used in paper.
     """
     def run_random_walk(M, teleport, beta, **kwargs):
         def update_seeds(r):
@@ -82,7 +67,7 @@ def random_walk(embeddings, positive_seeds, negative_seeds, beta=0.9, **kwargs):
 def label_propagate_probabilistic(embeddings, positive_seeds, negative_seeds, **kwargs):
     """
     Learns polarity scores via standard label propagation from seed sets.
-    One walk per label. Scores normalized to probabilities. 
+    One walk per label. Scores normalized to probabilities.
     """
     words = embeddings.iw
     M = transition_matrix(embeddings, **kwargs)
@@ -129,25 +114,25 @@ def graph_propagate(embeddings, positive_seeds, negative_seeds, **kwargs):
             for t in range(T):
                 for edge in get_rel_edges(F):
                     alpha_mat[seed, edge[1]] = max(
-                            alpha_mat[seed, edge[1]], 
+                            alpha_mat[seed, edge[1]],
                             alpha_mat[seed, edge[0]] * trans_mat[edge[0], edge[1]])
                     F.add(edge[1])
         return alpha_mat
 
     M = similarity_matrix(embeddings, **kwargs)
     M = (M + M.T)/2
-    print "Getting positive scores.."
+    print("Getting positive scores..")
     pos_alpha = M.copy()
     neg_alpha = M.copy()
     M = csr_matrix(M)
     pos_alpha = run_graph_propagate([embeddings.wi[seed] for seed in positive_seeds],
             pos_alpha, M, **kwargs)
     pos_alpha = pos_alpha + pos_alpha.T
-    print "Getting negative scores.."
+    print("Getting negative scores..")
     neg_alpha = run_graph_propagate([embeddings.wi[seed] for seed in negative_seeds],
             neg_alpha, M, **kwargs)
     neg_alpha = neg_alpha + neg_alpha.T
-    print "Computing final scores..."
+    print("Computing final scores...")
     polarities = {}
     index = embeddings.wi
     pos_pols = {w:1.0 for w in positive_seeds}
@@ -158,7 +143,7 @@ def graph_propagate(embeddings, positive_seeds, negative_seeds, **kwargs):
         neg_pols[w] = 0.0
     for w in util.logged_loop(index):
         if w not in positive_seeds and w not in negative_seeds:
-            pos_pols[w] = sum(pos_alpha[index[w], index[seed]] for seed in positive_seeds if seed in index) 
+            pos_pols[w] = sum(pos_alpha[index[w], index[seed]] for seed in positive_seeds if seed in index)
             neg_pols[w] = sum(neg_alpha[index[w], index[seed]] for seed in negative_seeds if seed in index)
     beta = np.sum(pos_pols.values()) / np.sum(neg_pols.values())
     for w in index:

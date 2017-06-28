@@ -1,4 +1,4 @@
-from socialsent.representations.embedding import SVDEmbedding, Embedding, GigaEmbedding
+from socialsent.representations.embedding import SVDEmbedding, Embedding, GigaEmbedding, GensimEmbedding
 from socialsent.representations.explicit import Explicit
 
 def create_representation(rep_type, path, *args, **kwargs):
@@ -8,5 +8,7 @@ def create_representation(rep_type, path, *args, **kwargs):
         return SVDEmbedding(path, *args, **kwargs)
     elif rep_type == 'GIGA':
         return GigaEmbedding(path, *args, **kwargs)
+    elif rep_type == 'GENSIM':
+        return GensimEmbedding(path, *args, **kwargs)
     else:
         return Embedding.load(path, *args, **kwargs)

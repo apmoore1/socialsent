@@ -3,7 +3,9 @@
 ### Authors: William L. Hamilton and Kevin Clark
 ### [Project Website](http://nlp.stanford.edu/projects/socialsent)
 
-## Overview 
+This is a very specific python 3 version of the original project. Within this repository a lot of the functionality has been removed, however the main purpose of this project is to have the original SentiProp algorithm working on python 3.
+
+## Overview
 
 SocialSent is a package for inducing and analyzing domain-specific sentiment lexicons.
 A number of state-of-the-art algorithms are included, including SentProp and Densifier (http://www.cis.lmu.de/~sascha/Ultradense/).
@@ -18,12 +20,12 @@ William L. Hamilton, Kevin Clark, Jure Leskovec, and Dan Jurafsky. Inducing Doma
 
 ## Install
 
-`pip install socialsent` will work but has some downsides right now. In particular, if you use the pip install method, you will need to know where the installation directory is in order to modify the paths in the `constants.py` folder. You also won't have access to the examples that are discussed below if you install via pip. 
+`pip install socialsent` will work but has some downsides right now. In particular, if you use the pip install method, you will need to know where the installation directory is in order to modify the paths in the `constants.py` folder. You also won't have access to the examples that are discussed below if you install via pip.
 
 As a preferred alternative, download the source from the GitHub repo and run
 `python setup.py install`
 
-Note that you should re-run this command every time after you update the paths in `constants.py` folder. 
+Note that you should re-run this command every time after you update the paths in `constants.py` folder.
 
 ## Using the code
 
@@ -37,7 +39,7 @@ This code also illustrates how to use the SocialSent methods.
 The file `polarity_induction_methods.py` contains implementations for a suite of sentiment induction algorithms, along with some comments/documentation on how to use them.
 The file `evaluate_methods.py` also includes the evaluation script used in our published work, which is useful to look at to get an idea of how SentProp and the other baselines work.
 
-NB: Right now the code uses dense numpy matrices in a (relatively) naive way and thus has memory requirements proportional to the square of the vocabulary size; with a reasonable amount of RAM, this works for vocabs of size 20000 words or less (which is reasonable for specific domain), but there are definitely optimizations that could be done, exploiting sparsity etc. I hope to get to these optimizations soon, but feel free to submit a pull request :). 
+NB: Right now the code uses dense numpy matrices in a (relatively) naive way and thus has memory requirements proportional to the square of the vocabulary size; with a reasonable amount of RAM, this works for vocabs of size 20000 words or less (which is reasonable for specific domain), but there are definitely optimizations that could be done, exploiting sparsity etc. I hope to get to these optimizations soon, but feel free to submit a pull request :).
 
 ## Dependencies
 
@@ -46,8 +48,11 @@ NB: Right now the code uses dense numpy matrices in a (relatively) naive way and
 An up-to-date Python 2.7 distribution, with the standard packages provided by the anaconda distribution is required. However, the code was only tested with some versions of these packages.
 
 In particular, the code was tested with:
-* theano (0.8.0) 
+* theano (0.8.0)
 * keras (0.3.3)
 * numpy (1.11.0)
 * scipy (0.15.1)
 * sklearn (0.18.dev0 or 0.17.1)
+* NLTK
+
+python3 -m nltk.downloader stopwords

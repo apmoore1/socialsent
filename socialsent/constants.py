@@ -1,9 +1,9 @@
-import util
+from socialsent import util
 import os
 from nltk.corpus import stopwords
 from pkg_resources import resource_filename
 
-### SYSTEM AGNOSTIC CONSTANTS 
+### SYSTEM AGNOSTIC CONSTANTS
 ######
 DATA = os.path.abspath(resource_filename('socialsent', 'data')) + "/"
 PROCESSED_LEXICONS = DATA + 'lexicons/'
