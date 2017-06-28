@@ -9,7 +9,7 @@ if __name__ == "__main__":
     print("Evaluting only binary classification performance on General Inquirer lexicon")
     lexicon = lexicons.load_lexicon("inquirer", remove_neutral=True)
     pos_seeds, neg_seeds = seeds.hist_seeds()
-    embeddings = create_representation("GIGA", "../word2vec_models/general/glove.6B.100d.txt",
+    embeddings = create_representation("GIGA", "data/example_embeddings/glove.6B.100d.txt",
         set(lexicon.keys()).union(pos_seeds).union(neg_seeds))
     eval_words = [word for word in embeddings.iw
             if not word in pos_seeds
