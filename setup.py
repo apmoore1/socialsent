@@ -1,13 +1,14 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='socialsent',
       version='0.1.2',
       description='Algorithms for inducing domain-specific sentiment lexicons from unlabeled corpora.',
       url='https://github.com/williamleif/socialsent',
+      packages=find_packages(),
       author='William Hamilton',
       author_email='wleif@stanford.edu',
       license='Apache Version 2',
-      packages=['socialsent'],
+      #packages=['socialsent'],
       install_requires = ['backports.weakref==1.0rc1',
                           'bleach==1.5.0',
                           'cycler==0.10.0',
