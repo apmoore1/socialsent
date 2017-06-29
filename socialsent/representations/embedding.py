@@ -130,8 +130,14 @@ class GigaEmbedding(Embedding):
             self.normalize()
 
 class GensimEmbedding(Embedding):
-    def __init__(self, gensim_vector, normalize=True, **kwargs):
-        self.iw = list(gensim_vector.wv.vocab)
+    def __init__(self, gensim_vector, normalize=True, words=None, **kwargs):
+        if words is not None:
+            self.iw = list(gensim_vector.wv.vocab)
+        else:
+            self.iw = []
+            for word in words:
+                if word in gensim_vector.wv.vocab:
+                    self.iw.append(word)
         self.wi = {w:i for i,w in enumerate(self.iw)}
         self.m = np.vstack(gensim_vector[w] for w in self.iw)
         self.dim = self.m.shape[1]
