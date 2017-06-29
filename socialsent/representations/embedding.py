@@ -132,8 +132,10 @@ class GigaEmbedding(Embedding):
 class GensimEmbedding(Embedding):
     def __init__(self, gensim_vector, normalize=True, words=None, **kwargs):
         if words is not None:
+            print('in here')
             self.iw = list(gensim_vector.wv.vocab)
         else:
+            print('this')
             self.iw = []
             for word in words:
                 if word in gensim_vector.wv.vocab:
